@@ -1,0 +1,23 @@
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        style="@style/CardView"
+        android:id="@+id/hitlist_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        card_view:cardCornerRadius="4dp"
+        android:layout_marginBottom="10dp">
+
+    <TextView
+            android:id="@+id/info_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@android:color/holo_blue_bright"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+            android:textIsSelectable="false"
+            android:height="75dp"/>
+
+
+</android.support.v7.widget.CardView>

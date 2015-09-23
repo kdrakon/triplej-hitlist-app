@@ -17,7 +17,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.example.myapplication2.app"
+        applicationId "io.policarp.triplejhitlistapp"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -40,6 +40,7 @@ dependencies {
     compile 'com.github.satyan:sugar:1.3'
 
     compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
 
     compile 'com.mcxiaoke.volley:library:1.0.19'
 }

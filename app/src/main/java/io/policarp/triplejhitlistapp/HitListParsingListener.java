@@ -1,4 +1,4 @@
-package com.example.myapplication2.app;
+package io.policarp.triplejhitlistapp;
 
 import java.util.List;
 
