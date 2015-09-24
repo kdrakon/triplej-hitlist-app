@@ -1,12 +1,10 @@
 package io.policarp.triplejhitlistapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
-import android.widget.ViewFlipper;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import roboguice.activity.RoboActivity;
@@ -17,24 +15,22 @@ import roboguice.inject.InjectView;
 public class MainActivity extends RoboActivity
 {
     @InjectView(R.id.hitListView)
-    RecyclerView hitListView;
+    private RecyclerView hitListView;
 
     @InjectView(R.id.archivedListView)
-    RecyclerView archivedListView;
-
-    @InjectView(R.id.viewflipper)
-    ViewFlipper viewFlipper;
-
-    @Inject
-    HitListDaoManager hitListDaoManager;
+    private RecyclerView archivedListView;
 
     @Inject
     @Named("recyclerListAdapterForHitList")
-    HitListRecyclerListAdapter hitListRecyclerListAdapter;
+    private HitListRecyclerListAdapter hitListRecyclerListAdapter;
 
     @Inject
     @Named("recyclerListAdapterForArchivedHitList")
-    HitListRecyclerListAdapter archivedHitListRecyclerListAdapter;
+    private HitListRecyclerListAdapter archivedHitListRecyclerListAdapter;
+
+    @Inject
+    @Named("hitListGestureListener")
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,39 +49,24 @@ public class MainActivity extends RoboActivity
         archivedListView.setLayoutManager(new LinearLayoutManager(this));
         archivedListView.setAdapter(archivedHitListRecyclerListAdapter);
 
-        final Context context = this;
+        // route touch events to GestureDetector
         View.OnTouchListener onTouchListener = new View.OnTouchListener()
         {
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
-                if (event.getHistorySize() > 3)
-                {
-                    float prevPos = event.getHistoricalAxisValue(MotionEvent.AXIS_X, 3);
-                    float curPos = event.getAxisValue(MotionEvent.AXIS_X);
-
-                    System.out.println(prevPos);
-                    System.out.println(curPos);
-
-                    if (curPos < prevPos)
-                    {
-                        viewFlipper.setInAnimation(context, R.anim.slide_left);
-                        viewFlipper.showNext();
-                    }
-
-                    if (curPos > prevPos)
-                    {
-                        viewFlipper.setOutAnimation(context, R.anim.slide_right);
-                        viewFlipper.showPrevious();
-                    }
-                }
-
-                return false;
+                return gestureDetector.onTouchEvent(event);
             }
         };
-
         hitListView.setOnTouchListener(onTouchListener);
         archivedListView.setOnTouchListener(onTouchListener);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        // route touch events to GestureDetector
+        return gestureDetector.onTouchEvent(event);
     }
 
     @Override

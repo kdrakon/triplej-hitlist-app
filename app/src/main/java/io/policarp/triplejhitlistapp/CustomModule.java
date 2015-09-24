@@ -3,6 +3,7 @@ package io.policarp.triplejhitlistapp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import android.view.GestureDetector;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
@@ -19,6 +20,13 @@ public class CustomModule extends AbstractModule
     protected void configure()
     {
 
+    }
+
+    @Provides
+    @Named("hitListGestureListener")
+    public GestureDetector getHitListGestureDector(HitListGestureListener hitListGestureListener)
+    {
+        return new GestureDetector(hitListGestureListener);
     }
 
     @Provides
