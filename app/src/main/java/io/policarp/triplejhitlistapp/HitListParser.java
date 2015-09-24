@@ -43,9 +43,9 @@ public class HitListParser
             try
             {
                 final JSONObject jsonObject = hitListArray.getJSONObject(i).getJSONObject("HitlistEntry");
-                final String artist = jsonObject.getString("artist");
-                final String track = jsonObject.getString("track");
-                final String label_name = jsonObject.getString("label_name");
+                final String artist = jsonObject.getString("artist").trim();
+                final String track = jsonObject.getString("track").trim();
+                final String label_name = jsonObject.getString("label_name").trim();
                 hitListEntities.add(new HitListEntity(artist, track, label_name));
 
             } catch (JSONException e)
