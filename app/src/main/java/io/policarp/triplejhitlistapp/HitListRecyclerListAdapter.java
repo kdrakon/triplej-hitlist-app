@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -45,9 +46,14 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
     @Override
     public void onBindViewHolder(HitListCardViewHolder viewHolder, int position)
     {
-        HitListEntity hitListEntity = getCachedHitList().get(position);
-        TextView infoText = (TextView) viewHolder.cardView.findViewById(R.id.info_text);
-        infoText.setText(hitListEntity.getHash());
+        final HitListEntity hitListEntity = getCachedHitList().get(position);
+
+        TextView artist = (TextView) viewHolder.cardView.findViewById(R.id.artist);
+        artist.setText(hitListEntity.getArtist());
+        artist.setMovementMethod(new ScrollingMovementMethod());
+
+        TextView track = (TextView) viewHolder.cardView.findViewById(R.id.track);
+        track.setText(hitListEntity.getTrack());
     }
 
     @Override

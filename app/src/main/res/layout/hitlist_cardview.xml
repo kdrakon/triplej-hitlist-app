@@ -4,20 +4,34 @@
         style="@style/CardView"
         android:id="@+id/hitlist_cardview"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="5dp"
         android:layout_marginBottom="10dp">
 
-    <TextView
-            android:id="@+id/info_text"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@android:color/holo_blue_bright"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/white"
-            android:textSize="14dp"
-            android:textIsSelectable="false"
-            android:height="75dp"/>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="40sp" android:paddingStart="10sp">
+            <TextView
+                    android:id="@+id/track"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@android:color/black"
+                    android:textSize="30sp"
+                    android:height="40sp"
+                    android:layout_above="@+id/artist"
+                    android:textAlignment="center"/>
+        </HorizontalScrollView>
 
+        <TextView
+                android:id="@+id/artist"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:background="@android:color/holo_blue_bright"
+                android:gravity="bottom|right" android:layout_alignParentBottom="true"
+                android:textIsSelectable="true" android:textSize="25sp"
+                android:singleLine="true"
+                android:paddingEnd="10sp"/>
+
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>
