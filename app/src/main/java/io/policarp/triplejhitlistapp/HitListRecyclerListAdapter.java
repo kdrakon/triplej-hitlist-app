@@ -1,28 +1,22 @@
 package io.policarp.triplejhitlistapp;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.google.inject.Inject;
-import org.roboguice.shaded.goole.common.cache.Cache;
-import org.roboguice.shaded.goole.common.cache.CacheBuilder;
+import org.roboguice.shaded.goole.common.cache.LoadingCache;
 
 /**
  * Created by kdrakon on 20/09/15.
  */
 public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecyclerListAdapter.HitListCardViewHolder>
 {
-    @Inject
-    private HitListDaoManager hitListDaoManager;
-
-    private Cache<String, List<HitListEntity>> cachedHitList = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
+    private final LoadingCache<String, List<HitListEntity>> cachedHitList;
 
     public static class HitListCardViewHolder extends RecyclerView.ViewHolder
     {
@@ -32,6 +26,11 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
             super(cardView);
             this.cardView = cardView;
         }
+    }
+
+    public HitListRecyclerListAdapter(LoadingCache<String, List<HitListEntity>> cachedHitList)
+    {
+        this.cachedHitList = cachedHitList;
     }
 
     @Override
@@ -61,18 +60,11 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
     {
         try
         {
-            return cachedHitList.get("", new Callable<List<HitListEntity>>()
-            {
-                @Override
-                public List<HitListEntity> call() throws Exception
-                {
-                    return hitListDaoManager.getActiveHitList();
-                }
-            });
+            return cachedHitList.get("");
 
         } catch (ExecutionException e)
         {
-            return hitListDaoManager.getActiveHitList();
+            return Collections.emptyList();
         }
     }
 }

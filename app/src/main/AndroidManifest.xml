@@ -10,6 +10,9 @@
         android:theme="@style/AppTheme"
         android:name="com.orm.SugarApp">
 
+        <meta-data android:name="roboguice.modules"
+                   android:value="io.policarp.triplejhitlistapp.CustomModule" />
+
         <meta-data android:name="DATABASE" android:value="triplejhitlistapp.db" />
         <!--<meta-data android:name="VERSION" android:value="2" />-->
         <meta-data android:name="QUERY_LOG" android:value="false" />

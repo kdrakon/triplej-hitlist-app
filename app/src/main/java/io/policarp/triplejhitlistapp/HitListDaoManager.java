@@ -28,6 +28,19 @@ public class HitListDaoManager
         return hitListEntities;
     }
 
+    public List<HitListEntity> getArchivedHitList()
+    {
+        List<HitListEntity> hitListEntities = new ArrayList<>();
+        for (HitListEntity entity : HitListEntity.listAll(HitListEntity.class))
+        {
+            if (entity.isRemovedFromHitList())
+            {
+                hitListEntities.add(entity);
+            }
+        }
+        return hitListEntities;
+    }
+
     public void updateHitListEntities(List<HitListEntity> newHitListEntities)
     {
         final Map<String, HitListEntity> newHitListEntityMap = new LinkedHashMap<>(newHitListEntities.size());
