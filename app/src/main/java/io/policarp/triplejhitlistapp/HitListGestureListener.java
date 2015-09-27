@@ -20,7 +20,7 @@ public class HitListGestureListener extends GestureDetector.SimpleOnGestureListe
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
     {
-        if (Math.abs(velocityX) >= 1000)
+        if (Math.abs(velocityX) >= 8000)
         {
             final int direction = (velocityX > 0) ? 1 : -1;
             final int translate = direction * 100;
