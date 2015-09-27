@@ -3,19 +3,19 @@
                 tools:context=".MainActivity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="1dp"
-                android:paddingBottom="0dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="4dp"
+                android:layout_margin="0dp"
                 android:background="@android:color/holo_orange_dark">
 
     <ViewFlipper
     android:id="@+id/hitListViewFlipper"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_margin="6dp">
+    android:padding="0dp"
+    android:layout_margin="0dp">
 
-        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="0dp" android:padding="0dp">
             <android.support.v7.widget.RecyclerView
                     android:id="@+id/hitListView"
                     android:scrollbars="vertical"
@@ -33,7 +33,7 @@
                     android:layout_alignParentEnd="true"/>
         </RelativeLayout>
 
-        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="0dp" android:padding="0dp">
             <android.support.v7.widget.RecyclerView
                     android:id="@+id/archivedListView"
                     android:scrollbars="vertical"
