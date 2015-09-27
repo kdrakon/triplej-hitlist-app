@@ -1,4 +1,4 @@
-package io.policarp.triplejhitlistapp;
+package io.policarp.triplejhitlistapp.dao;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

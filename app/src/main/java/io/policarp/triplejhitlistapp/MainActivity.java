@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import io.policarp.triplejhitlistapp.parsing.HitListParsingService;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;

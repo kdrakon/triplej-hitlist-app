@@ -1,4 +1,4 @@
-package io.policarp.triplejhitlistapp;
+package io.policarp.triplejhitlistapp.parsing;
 
 import android.content.Intent;
 import com.android.volley.Request;

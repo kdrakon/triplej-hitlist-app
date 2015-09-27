@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="io.policarp.triplejhitlistapp.HitListParsingService"
+        <service android:name=".parsing.HitListParsingService"
                  android:enabled="true"
                  android:exported="false"/>
 

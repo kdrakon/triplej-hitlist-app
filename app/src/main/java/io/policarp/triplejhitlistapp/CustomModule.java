@@ -7,6 +7,8 @@ import android.view.GestureDetector;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
+import io.policarp.triplejhitlistapp.dao.HitListDaoManager;
+import io.policarp.triplejhitlistapp.dao.HitListEntity;
 import org.roboguice.shaded.goole.common.cache.CacheBuilder;
 import org.roboguice.shaded.goole.common.cache.CacheLoader;
 import org.roboguice.shaded.goole.common.cache.LoadingCache;

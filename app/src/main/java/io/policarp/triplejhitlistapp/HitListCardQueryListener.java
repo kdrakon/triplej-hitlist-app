@@ -1,12 +1,12 @@
 package io.policarp.triplejhitlistapp;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.SearchManager;
 import android.content.Intent;
 import android.provider.MediaStore;
 import android.view.View;
+import io.policarp.triplejhitlistapp.dao.HitListEntity;
 
 /**
  * Created by kdrakon on 27/09/15.

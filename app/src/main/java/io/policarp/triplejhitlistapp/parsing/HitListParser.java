@@ -1,8 +1,9 @@
-package io.policarp.triplejhitlistapp;
+package io.policarp.triplejhitlistapp.parsing;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.policarp.triplejhitlistapp.dao.HitListEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

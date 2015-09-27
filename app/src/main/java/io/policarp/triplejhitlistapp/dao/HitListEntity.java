@@ -1,4 +1,4 @@
-package io.policarp.triplejhitlistapp;
+package io.policarp.triplejhitlistapp.dao;
 
 import com.orm.SugarRecord;
 

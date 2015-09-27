@@ -1,10 +1,12 @@
-package io.policarp.triplejhitlistapp;
+package io.policarp.triplejhitlistapp.parsing;
 
 import java.util.List;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.inject.Inject;
+import io.policarp.triplejhitlistapp.dao.HitListDaoManager;
+import io.policarp.triplejhitlistapp.dao.HitListEntity;
 import org.roboguice.shaded.goole.common.base.Optional;
 
 /**
