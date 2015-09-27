@@ -10,14 +10,15 @@
         android:layout_marginBottom="10dp">
 
     <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
-        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="40sp" android:paddingStart="10sp">
+        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="40sp" android:paddingStart="10sp"
+                              android:textAlignment="textStart" android:paddingTop="5sp">
             <TextView
                     android:id="@+id/track"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/black"
-                    android:textSize="30sp"
-                    android:height="40sp"
+                    android:textSize="20sp"
+                    android:height="30sp"
                     android:layout_above="@+id/artist"
                     android:textAlignment="center"/>
         </HorizontalScrollView>
@@ -27,8 +28,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="30dp"
                 android:background="@android:color/holo_blue_bright"
-                android:gravity="bottom|right" android:layout_alignParentBottom="true"
-                android:textIsSelectable="true" android:textSize="25sp"
+                android:gravity="bottom|right"
+                android:layout_alignParentBottom="true"
+                android:textIsSelectable="true"
+                android:textSize="25sp"
                 android:singleLine="true"
                 android:paddingEnd="10sp"/>
 

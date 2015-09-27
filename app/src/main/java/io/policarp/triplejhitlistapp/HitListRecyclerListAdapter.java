@@ -4,10 +4,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.app.SearchManager;
+import android.content.Intent;
+import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import org.roboguice.shaded.goole.common.cache.LoadingCache;
@@ -54,6 +58,9 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
 
         TextView track = (TextView) viewHolder.cardView.findViewById(R.id.track);
         track.setText(hitListEntity.getTrack());
+
+        // Attach query listener
+        viewHolder.cardView.setOnLongClickListener(new HitListCardQueryListener(hitListEntity));
     }
 
     @Override
