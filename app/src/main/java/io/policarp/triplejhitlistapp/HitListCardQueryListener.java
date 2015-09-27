@@ -15,20 +15,20 @@ public class HitListCardQueryListener implements View.OnLongClickListener
 {
     final private static Pattern curlyBracketPattern = Pattern.compile("\\{.+\\}");
 
-    final private HitListEntity hitListEntity;
+    final String artistQuery;
+    final String trackQuery;
+    final String genericQuery;
 
     public HitListCardQueryListener(HitListEntity hitListEntity)
     {
-        this.hitListEntity = hitListEntity;
+        artistQuery = curlyBracketPattern.matcher(hitListEntity.getArtist()).replaceAll("");
+        trackQuery = curlyBracketPattern.matcher(hitListEntity.getTrack()).replaceAll("");
+        genericQuery = artistQuery.concat(" ").concat(trackQuery);
     }
 
     @Override
     public boolean onLongClick(View v)
     {
-        final String artistQuery = curlyBracketPattern.matcher(hitListEntity.getArtist()).replaceAll("");
-        final String trackQuery = curlyBracketPattern.matcher(hitListEntity.getTrack()).replaceAll("");
-        final String genericQuery = artistQuery.concat(" ").concat(trackQuery);
-
         final Intent queryIntent = new Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
         queryIntent.putExtra(MediaStore.EXTRA_MEDIA_FOCUS, "vnd.android.cursor.item/audio");
         queryIntent.putExtra(MediaStore.EXTRA_MEDIA_TITLE, trackQuery);
