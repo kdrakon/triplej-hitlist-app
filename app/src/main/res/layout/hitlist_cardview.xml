@@ -15,7 +15,7 @@
 
     <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
         <HorizontalScrollView android:layout_width="match_parent" android:layout_height="40sp" android:paddingStart="10sp"
-                              android:textAlignment="textStart" android:paddingTop="5sp">
+                              android:textAlignment="textStart" android:paddingTop="5sp" android:scrollbars="none">
             <TextView
                     android:id="@+id/track"
                     android:layout_width="match_parent"

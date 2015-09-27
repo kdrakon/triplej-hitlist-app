@@ -1,5 +1,6 @@
 package io.policarp.triplejhitlistapp.parsing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.android.volley.Response;
@@ -20,15 +21,27 @@ public class HitListParsingListener implements Response.Listener<String>, Respon
     @Inject
     private HitListDaoManager hitListDaoManager;
 
+    @Inject
+    private WikipediaImageLookup imageLookup;
+
     @Override public void onResponse(String response)
     {
-        Optional<List<HitListEntity>> newHitListEntities = hitListParser.parseJsonResponse(response);
+        final Optional<List<HitListEntity>> newHitListEntities = hitListParser.parseJsonResponse(response);
         if (newHitListEntities.isPresent())
         {
             hitListDaoManager.updateHitListEntities(newHitListEntities.get());
+            doArtistImageLookups(newHitListEntities.get());
+
         } else {
             // TODO inform user of failure
         }
+    }
+
+    private void doArtistImageLookups(final List<HitListEntity> hitListEntities)
+    {
+        final List<String> artists = new ArrayList<>();
+        for (HitListEntity hitListEntity : hitListEntities) artists.add(hitListEntity.getArtist());
+        imageLookup.doArtistImageLookup(artists);
     }
 
     @Override public void onErrorResponse(VolleyError error)

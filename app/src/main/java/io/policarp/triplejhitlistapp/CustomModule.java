@@ -3,8 +3,10 @@ package io.policarp.triplejhitlistapp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import android.content.Context;
 import android.view.GestureDetector;
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import io.policarp.triplejhitlistapp.dao.HitListDaoManager;
@@ -22,6 +24,13 @@ public class CustomModule extends AbstractModule
     protected void configure()
     {
 
+    }
+
+    @Provides
+    @Named("applicationContext")
+    public Context getApplicationContext(Context context)
+    {
+        return context;
     }
 
     @Provides
