@@ -6,13 +6,13 @@
                 android:paddingRight="10dp"
                 android:paddingLeft="4dp"
                 android:layout_margin="0dp"
-                android:background="@android:color/holo_orange_dark">
+                android:background="@drawable/background_for_hitlist">
 
     <ViewFlipper
     android:id="@+id/hitListViewFlipper"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingTop="2dp"
+    android:padding="0dp"
     android:layout_margin="0dp">
 
         <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="0dp" android:padding="0dp">
@@ -25,7 +25,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="false"
                     android:padding="0dp"
-                    android:background="@android:color/holo_orange_dark"
                     android:layout_marginLeft="0dp"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="0dp"
@@ -43,7 +42,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="false"
                     android:padding="0dp"
-                    android:background="@android:color/holo_orange_dark"
                     android:layout_marginLeft="0dp"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="0dp"

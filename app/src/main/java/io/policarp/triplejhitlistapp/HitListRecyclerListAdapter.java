@@ -49,10 +49,7 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
     {
         final HitListEntity hitListEntity = getCachedHitList().get(position);
 
-        if (hitListEntity.isNewHitListEntity())
-        {
-            viewHolder.cardView.setCardElevation(4f);
-        }
+        if (hitListEntity.isNewHitListEntity()) viewHolder.cardView.setCardElevation(4f);
 
         TextView artist = (TextView) viewHolder.cardView.findViewById(R.id.artist);
         artist.setText(hitListEntity.getArtist());
