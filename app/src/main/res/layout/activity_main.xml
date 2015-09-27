@@ -9,10 +9,11 @@
             android:layout_width="match_parent">
 
         <android.support.v7.widget.Toolbar
-                android:layout_height="50dp"
+                android:id="@+id/mainToolbar"
+                android:layout_height="75dp"
                 android:layout_width="match_parent"
-                android:background="@drawable/toolbar_background"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:layout_scrollFlags="scroll|enterAlways">
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 

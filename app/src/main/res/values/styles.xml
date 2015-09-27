@@ -2,9 +2,9 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#ff6ab77f</item>
-        <item name="colorPrimaryDark">#ff5fb71a</item>
-        <item name="colorAccent">#FF4081</item>
+        <item name="colorPrimary">@android:color/holo_blue_dark</item>
+        <item name="colorPrimaryDark">@android:color/holo_blue_light</item>
+        <item name="colorAccent">@android:color/holo_blue_dark</item>
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 

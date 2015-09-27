@@ -4,17 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.*;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import io.policarp.triplejhitlistapp.parsing.HitListParsingService;
-import roboguice.activity.RoboActivity;
+import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 @ContentView(R.layout.activity_main)
-public class MainActivity extends RoboActivity
+public class MainActivity extends RoboActionBarActivity
 {
+    @InjectView(R.id.mainToolbar)
+    private Toolbar mainToolbar;
+
     @InjectView(R.id.hitListView)
     private RecyclerView hitListView;
 
@@ -38,6 +42,7 @@ public class MainActivity extends RoboActivity
     {
         super.onCreate(savedInstanceState);
         configureHitListViews();
+        setSupportActionBar(mainToolbar);
     }
 
     private void configureHitListViews()
