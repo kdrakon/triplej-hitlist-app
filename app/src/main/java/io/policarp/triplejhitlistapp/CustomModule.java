@@ -6,11 +6,11 @@ import java.util.concurrent.TimeUnit;
 import android.content.Context;
 import android.view.GestureDetector;
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import io.policarp.triplejhitlistapp.dao.HitListDaoManager;
 import io.policarp.triplejhitlistapp.dao.HitListEntity;
+import io.policarp.triplejhitlistapp.parsing.WikipediaImageLookup;
 import org.roboguice.shaded.goole.common.cache.CacheBuilder;
 import org.roboguice.shaded.goole.common.cache.CacheLoader;
 import org.roboguice.shaded.goole.common.cache.LoadingCache;
@@ -42,10 +42,10 @@ public class CustomModule extends AbstractModule
 
     @Provides
     @Named("recyclerListAdapterForHitList")
-    public HitListRecyclerListAdapter getHitListRecyclerListAdapter(
+    public HitListRecyclerListAdapter getHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
             @Named("hitListCache") LoadingCache<String, List<HitListEntity>> hitListCache)
     {
-        return new HitListRecyclerListAdapter(hitListCache);
+        return new HitListRecyclerListAdapter(imageLookup, hitListCache);
     }
 
     @Provides
@@ -69,10 +69,10 @@ public class CustomModule extends AbstractModule
 
     @Provides
     @Named("recyclerListAdapterForArchivedHitList")
-    public HitListRecyclerListAdapter getArchivedHitListRecyclerListAdapter(
+    public HitListRecyclerListAdapter getArchivedHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
             @Named("archivedListCache") LoadingCache<String, List<HitListEntity>> archivedHitListCache)
     {
-        return new HitListRecyclerListAdapter(archivedHitListCache);
+        return new HitListRecyclerListAdapter(imageLookup, archivedHitListCache);
     }
 
     @Provides

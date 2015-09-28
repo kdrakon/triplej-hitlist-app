@@ -10,7 +10,9 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.google.inject.Inject;
 import io.policarp.triplejhitlistapp.dao.HitListEntity;
+import io.policarp.triplejhitlistapp.parsing.WikipediaImageLookup;
 import org.roboguice.shaded.goole.common.cache.LoadingCache;
 
 /**
@@ -18,7 +20,14 @@ import org.roboguice.shaded.goole.common.cache.LoadingCache;
  */
 public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecyclerListAdapter.HitListCardViewHolder>
 {
+    private final WikipediaImageLookup imageLookup;
     private final LoadingCache<String, List<HitListEntity>> cachedHitList;
+
+    public HitListRecyclerListAdapter(WikipediaImageLookup imageLookup, LoadingCache<String, List<HitListEntity>> cachedHitList)
+    {
+        this.imageLookup = imageLookup;
+        this.cachedHitList = cachedHitList;
+    }
 
     public static class HitListCardViewHolder extends RecyclerView.ViewHolder
     {
@@ -28,11 +37,6 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
             super(cardView);
             this.cardView = cardView;
         }
-    }
-
-    public HitListRecyclerListAdapter(LoadingCache<String, List<HitListEntity>> cachedHitList)
-    {
-        this.cachedHitList = cachedHitList;
     }
 
     @Override
@@ -60,6 +64,8 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
 
         // Attach query listener
         viewHolder.cardView.setOnLongClickListener(new HitListCardQueryListener(hitListEntity));
+
+        imageLookup.getCachedImageLookup(hitListEntity.getArtist());
     }
 
     @Override
