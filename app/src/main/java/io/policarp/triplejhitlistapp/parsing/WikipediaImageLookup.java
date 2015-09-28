@@ -57,7 +57,7 @@ public class WikipediaImageLookup
 
     public Optional<Bitmap> getCachedImageLookup(String artist)
     {
-        File cachedImageFile = new File(context.getCacheDir(), Strings.md5(artist));
+        File cachedImageFile = new File(context.getCacheDir(), getFilename(artist));
         if (cachedImageFile.exists() && cachedImageFile.canRead())
         {
             try
@@ -74,6 +74,11 @@ public class WikipediaImageLookup
         } else {
             return Optional.absent();
         }
+    }
+
+    static String getFilename(final String artist)
+    {
+        return Strings.md5(artist).concat(CACHE_IMAGE_SUFFIX);
     }
 
     private static class WikipediaRequestListener implements Response.Listener<JSONObject>, Response.ErrorListener
@@ -140,7 +145,7 @@ public class WikipediaImageLookup
         {
             try
             {
-                final File newImageFile = File.createTempFile(Strings.md5(artist), CACHE_IMAGE_SUFFIX, localCacheFolder);
+                final File newImageFile = new File(localCacheFolder, getFilename(artist));
                 if (newImageFile.exists() && newImageFile.canRead()) return null;
 
                 URL url = new URL(imageUrl);
