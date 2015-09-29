@@ -3,49 +3,35 @@ package io.policarp.triplejhitlistapp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import android.content.Context;
-import android.view.GestureDetector;
-import com.google.inject.AbstractModule;
+import com.android.volley.toolbox.ImageLoader;
+import com.google.inject.Binder;
+import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import io.policarp.triplejhitlistapp.dao.HitListDaoManager;
 import io.policarp.triplejhitlistapp.dao.HitListEntity;
-import io.policarp.triplejhitlistapp.parsing.WikipediaImageLookup;
+import io.policarp.triplejhitlistapp.imageloading.WikipediaImageLookup;
 import org.roboguice.shaded.goole.common.cache.CacheBuilder;
 import org.roboguice.shaded.goole.common.cache.CacheLoader;
 import org.roboguice.shaded.goole.common.cache.LoadingCache;
 
 /**
- * Created by kdrakon on 23/09/15.
+ * Created by kdrakon on 28/09/15.
  */
-public class CustomModule extends AbstractModule
+public class HitListRecyclerListAdapterModule implements Module
 {
     @Override
-    protected void configure()
+    public void configure(Binder binder)
     {
-
-    }
-
-    @Provides
-    @Named("applicationContext")
-    public Context getApplicationContext(Context context)
-    {
-        return context;
-    }
-
-    @Provides
-    @Named("hitListGestureListener")
-    public GestureDetector getHitListGestureDector(HitListGestureListener hitListGestureListener)
-    {
-        return new GestureDetector(hitListGestureListener);
     }
 
     @Provides
     @Named("recyclerListAdapterForHitList")
     public HitListRecyclerListAdapter getHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
-            @Named("hitListCache") LoadingCache<String, List<HitListEntity>> hitListCache)
+            @Named("hitListCache") LoadingCache<String, List<HitListEntity>> hitListCache,
+            @Named("artistImageLoader") ImageLoader artistImageLoader)
     {
-        return new HitListRecyclerListAdapter(imageLookup, hitListCache);
+        return new HitListRecyclerListAdapter(hitListCache, imageLookup, artistImageLoader);
     }
 
     @Provides
@@ -70,9 +56,10 @@ public class CustomModule extends AbstractModule
     @Provides
     @Named("recyclerListAdapterForArchivedHitList")
     public HitListRecyclerListAdapter getArchivedHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
-            @Named("archivedListCache") LoadingCache<String, List<HitListEntity>> archivedHitListCache)
+            @Named("archivedListCache") LoadingCache<String, List<HitListEntity>> archivedHitListCache,
+            @Named("artistImageLoader") ImageLoader artistImageLoader)
     {
-        return new HitListRecyclerListAdapter(imageLookup, archivedHitListCache);
+        return new HitListRecyclerListAdapter(archivedHitListCache, imageLookup, artistImageLoader);
     }
 
     @Provides

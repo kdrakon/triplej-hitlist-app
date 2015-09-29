@@ -8,11 +8,14 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.google.inject.Inject;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import io.policarp.triplejhitlistapp.dao.HitListEntity;
-import io.policarp.triplejhitlistapp.parsing.WikipediaImageLookup;
+import io.policarp.triplejhitlistapp.imageloading.WikipediaImageLookup;
+import org.roboguice.shaded.goole.common.base.Optional;
 import org.roboguice.shaded.goole.common.cache.LoadingCache;
 
 /**
@@ -22,11 +25,14 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
 {
     private final WikipediaImageLookup imageLookup;
     private final LoadingCache<String, List<HitListEntity>> cachedHitList;
+    private final ImageLoader networkImageLoader;
 
-    public HitListRecyclerListAdapter(WikipediaImageLookup imageLookup, LoadingCache<String, List<HitListEntity>> cachedHitList)
+    public HitListRecyclerListAdapter(LoadingCache<String, List<HitListEntity>> cachedHitList,
+            WikipediaImageLookup imageLookup, ImageLoader networkImageLoader)
     {
         this.imageLookup = imageLookup;
         this.cachedHitList = cachedHitList;
+        this.networkImageLoader = networkImageLoader;
     }
 
     public static class HitListCardViewHolder extends RecyclerView.ViewHolder
@@ -48,6 +54,9 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
         return viewHolder;
     }
 
+    /**
+     * All CardView rendering happens here
+     */
     @Override
     public void onBindViewHolder(HitListCardViewHolder viewHolder, int position)
     {
@@ -62,10 +71,18 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
         TextView track = (TextView) viewHolder.cardView.findViewById(R.id.track);
         track.setText(hitListEntity.getTrack());
 
+        NetworkImageView artistImage = (NetworkImageView) viewHolder.cardView.findViewById(R.id.artistImageView);
+        Optional<String> cachedImageUrl = imageLookup.getCachedImageUrl(hitListEntity.getArtist());
+        if (cachedImageUrl.isPresent())
+        {
+            artistImage.setImageUrl(cachedImageUrl.get(), networkImageLoader);
+            artistImage.setVisibility(View.VISIBLE);
+        } else {
+            artistImage.setVisibility(View.GONE);
+        }
+
         // Attach query listener
         viewHolder.cardView.setOnLongClickListener(new HitListCardQueryListener(hitListEntity));
-
-        imageLookup.getCachedImageLookup(hitListEntity.getArtist());
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
 import com.google.inject.Inject;
 import io.policarp.triplejhitlistapp.dao.HitListDaoManager;
 import io.policarp.triplejhitlistapp.dao.HitListEntity;
+import io.policarp.triplejhitlistapp.imageloading.WikipediaImageLookup;
 import org.roboguice.shaded.goole.common.base.Optional;
 
 /**

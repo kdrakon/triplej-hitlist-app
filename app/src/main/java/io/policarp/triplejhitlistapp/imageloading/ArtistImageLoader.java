@@ -1,0 +1,119 @@
+package io.policarp.triplejhitlistapp.imageloading;
+
+import java.nio.ByteBuffer;
+import java.util.concurrent.TimeUnit;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.name.Named;
+import org.roboguice.shaded.goole.common.base.Optional;
+import org.roboguice.shaded.goole.common.cache.Cache;
+import org.roboguice.shaded.goole.common.cache.CacheBuilder;
+import roboguice.inject.ContextSingleton;
+
+/**
+ * Created by kdrakon on 28/09/15.
+ */
+public class ArtistImageLoader implements Provider<ImageLoader>
+{
+    @Inject
+    @Named("applicationContext")
+    private Context context;
+
+    @Override
+    @ContextSingleton
+    public ImageLoader get()
+    {
+        final Cache<String, Bitmap> memCache = CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.SECONDS).build();
+        final DiskBasedCache diskBasedCache = new DiskBasedCache(context.getCacheDir());
+        final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context);
+
+        final ImageLoader.ImageCache imageCache = new ImageLoader.ImageCache()
+        {
+            @Override
+            public Bitmap getBitmap(String url)
+            {
+                Bitmap retBitmap = null;
+
+                // check mem first
+                Optional<Bitmap> bitmap = Optional.fromNullable(memCache.getIfPresent(url));
+                if (bitmap.isPresent())
+                {
+                    retBitmap = bitmap.get();
+                    return retBitmap;
+                }
+
+                // check disk next
+                Optional<com.android.volley.Cache.Entry> entry = Optional.fromNullable(diskBasedCache.get(url));
+                if (entry.isPresent()) {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    retBitmap = BitmapFactory.decodeByteArray(entry.get().data, 0, entry.get().data.length, options);
+                    return retBitmap;
+                }
+
+                return retBitmap;
+            }
+
+            @Override
+            public void putBitmap(String url, Bitmap bitmap)
+            {
+                memCache.put(url, bitmap);
+                diskBasedCache.put(url, new ArtistImageDiskCacheEntry(bitmap));
+            }
+        };
+
+        return new ImageLoader(networkImageLoaderRequestQueue, imageCache);
+    }
+
+    /**
+     * from http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+     */
+    private static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    private static class ArtistImageDiskCacheEntry extends com.android.volley.Cache.Entry
+    {
+        private ArtistImageDiskCacheEntry(Bitmap artistBitmap)
+        {
+            setData(artistBitmap);
+        }
+
+        private void setData(final Bitmap artistBitmap)
+        {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(artistBitmap.getByteCount());
+            artistBitmap.copyPixelsToBuffer(byteBuffer);
+            this.data = byteBuffer.array();
+
+            this.ttl = System.currentTimeMillis() + (86400 * 1000);
+            this.softTtl = ttl;
+        }
+    }
+}
