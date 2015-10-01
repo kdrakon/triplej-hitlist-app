@@ -1,6 +1,7 @@
 package io.policarp.triplejhitlistapp.imageloading;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
@@ -32,8 +33,13 @@ public class ArtistImageLoader implements Provider<ImageLoader>
     public ImageLoader get()
     {
         final Cache<String, Bitmap> memCache = CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.HOURS).build();
-        final DiskBasedCache diskBasedCache = new DiskBasedCache(context.getCacheDir());
+        final File diskCache = new File(context.getCacheDir(), "artist_image_cache");
+        if (!diskCache.exists()) diskCache.mkdirs();
+        final DiskBasedCache diskBasedCache = new DiskBasedCache(new File(context.getCacheDir(), "artist_image_cache"));
         final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context);
+
+        // initialize to reload already cached files
+        diskBasedCache.initialize();
 
         final ImageLoader.ImageCache imageCache = new ImageLoader.ImageCache()
         {

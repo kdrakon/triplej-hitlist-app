@@ -87,7 +87,9 @@ public class WikipediaImageLookup
 
     private static File getFileHandleForCachedArtistImageUrl(final Context context, final String artist)
     {
-        return new File(context.getCacheDir(), getFilename(artist));
+        final File imageUrlCacheDir = new File(context.getCacheDir(), "image_url_cache");
+        if (!imageUrlCacheDir.exists()) imageUrlCacheDir.mkdirs();
+        return new File(imageUrlCacheDir, getFilename(artist));
     }
 
     private static class WikipediaRequestListener implements Response.Listener<JSONObject>, Response.ErrorListener
