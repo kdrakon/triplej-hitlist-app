@@ -1,5 +1,6 @@
 package io.policarp.triplejhitlistapp.imageloading;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +32,7 @@ public class ArtistImageLoader implements Provider<ImageLoader>
     @ContextSingleton
     public ImageLoader get()
     {
-        final Cache<String, Bitmap> memCache = CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.SECONDS).build();
+        final Cache<String, Bitmap> memCache = CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.HOURS).build();
         final DiskBasedCache diskBasedCache = new DiskBasedCache(context.getCacheDir());
         final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context);
 
@@ -40,26 +41,21 @@ public class ArtistImageLoader implements Provider<ImageLoader>
             @Override
             public Bitmap getBitmap(String url)
             {
-                Bitmap retBitmap = null;
-
                 // check mem first
                 Optional<Bitmap> bitmap = Optional.fromNullable(memCache.getIfPresent(url));
                 if (bitmap.isPresent())
                 {
-                    retBitmap = bitmap.get();
-                    return retBitmap;
+                    return bitmap.get();
                 }
 
                 // check disk next
                 Optional<com.android.volley.Cache.Entry> entry = Optional.fromNullable(diskBasedCache.get(url));
-                if (entry.isPresent()) {
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    retBitmap = BitmapFactory.decodeByteArray(entry.get().data, 0, entry.get().data.length, options);
-                    return retBitmap;
+                if (entry.isPresent())
+                {
+                    return BitmapFactory.decodeByteArray(entry.get().data, 0, entry.get().data.length);
                 }
 
-                return retBitmap;
+                return null;
             }
 
             @Override
@@ -108,9 +104,9 @@ public class ArtistImageLoader implements Provider<ImageLoader>
 
         private void setData(final Bitmap artistBitmap)
         {
-            ByteBuffer byteBuffer = ByteBuffer.allocate(artistBitmap.getByteCount());
-            artistBitmap.copyPixelsToBuffer(byteBuffer);
-            this.data = byteBuffer.array();
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            artistBitmap.compress(Bitmap.CompressFormat.PNG, 1, os);
+            this.data = os.toByteArray();
 
             this.ttl = System.currentTimeMillis() + (86400 * 1000);
             this.softTtl = ttl;
