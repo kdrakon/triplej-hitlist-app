@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.ImageLoader;
@@ -28,33 +29,36 @@ public class ArtistImageLoader implements Provider<ImageLoader>
     @Named("applicationContext")
     private Context context;
 
+    @Inject
+    @Named("imageLoadingDiskBasedCache")
+    private DiskBasedCache imageLoadingDiskBasedCache;
+
+    @Inject
+    @Named("imageLoadingMemBasedCache")
+    private Cache<String, Bitmap> imageLoadingMemBasedCache;
+
+    @Inject
+    @Named("networkImageLoaderRequestQueue")
+    private RequestQueue networkImageLoaderRequestQueue;
+
     @Override
     @ContextSingleton
     public ImageLoader get()
     {
-        final Cache<String, Bitmap> memCache = CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.HOURS).build();
-        final File diskCache = new File(context.getCacheDir(), "artist_image_cache");
-        if (!diskCache.exists()) diskCache.mkdirs();
-        final DiskBasedCache diskBasedCache = new DiskBasedCache(new File(context.getCacheDir(), "artist_image_cache"));
-        final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context);
-
-        // initialize to reload already cached files
-        diskBasedCache.initialize();
-
         final ImageLoader.ImageCache imageCache = new ImageLoader.ImageCache()
         {
             @Override
             public Bitmap getBitmap(String url)
             {
                 // check mem first
-                Optional<Bitmap> bitmap = Optional.fromNullable(memCache.getIfPresent(url));
+                Optional<Bitmap> bitmap = Optional.fromNullable(imageLoadingMemBasedCache.getIfPresent(url));
                 if (bitmap.isPresent())
                 {
                     return bitmap.get();
                 }
 
                 // check disk next
-                Optional<com.android.volley.Cache.Entry> entry = Optional.fromNullable(diskBasedCache.get(url));
+                Optional<com.android.volley.Cache.Entry> entry = Optional.fromNullable(imageLoadingDiskBasedCache.get(url));
                 if (entry.isPresent())
                 {
                     return BitmapFactory.decodeByteArray(entry.get().data, 0, entry.get().data.length);
@@ -64,10 +68,18 @@ public class ArtistImageLoader implements Provider<ImageLoader>
             }
 
             @Override
-            public void putBitmap(String url, Bitmap bitmap)
+            public void putBitmap(final String url, final Bitmap bitmap)
             {
-                memCache.put(url, bitmap);
-                diskBasedCache.put(url, new ArtistImageDiskCacheEntry(bitmap));
+                imageLoadingMemBasedCache.put(url, bitmap);
+
+                new AsyncTask<Void, Void, Void>()
+                {
+                    @Override protected Void doInBackground(Void... params)
+                    {
+                        imageLoadingDiskBasedCache.put(url, new ArtistImageDiskCacheEntry(bitmap));
+                        return null;
+                    }
+                }.doInBackground();
             }
         };
 

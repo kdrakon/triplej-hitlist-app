@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.google.inject.Binder;
-import com.google.inject.Module;
+import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import io.policarp.triplejhitlistapp.dao.HitListDaoManager;
@@ -18,10 +17,10 @@ import org.roboguice.shaded.goole.common.cache.LoadingCache;
 /**
  * Created by kdrakon on 28/09/15.
  */
-public class HitListRecyclerListAdapterModule implements Module
+public class HitListRecyclerListAdapterModule extends AbstractModule
 {
     @Override
-    public void configure(Binder binder)
+    public void configure()
     {
     }
 

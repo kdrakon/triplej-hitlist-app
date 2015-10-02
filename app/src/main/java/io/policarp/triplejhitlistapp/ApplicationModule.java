@@ -3,14 +3,11 @@ package io.policarp.triplejhitlistapp;
 import android.content.Context;
 import android.view.GestureDetector;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.inject.AbstractModule;
-import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
-import com.google.inject.name.Names;
-import io.policarp.triplejhitlistapp.imageloading.ArtistImageLoader;
+import io.policarp.triplejhitlistapp.imageloading.ImageLoadingModule;
 import roboguice.inject.ContextSingleton;
 
 /**
@@ -22,8 +19,7 @@ public class ApplicationModule extends AbstractModule
     protected void configure()
     {
         install(new HitListRecyclerListAdapterModule());
-
-        binder.bind(Key.get(ImageLoader.class, Names.named("artistImageLoader"))).toProvider(ArtistImageLoader.class);
+        install(new ImageLoadingModule());
     }
 
     @Provides
