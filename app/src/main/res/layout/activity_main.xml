@@ -10,7 +10,7 @@
 
         <android.support.v7.widget.Toolbar
                 android:id="@+id/mainToolbar"
-                android:layout_height="75dp"
+                android:layout_height="50dp"
                 android:layout_width="match_parent"
                 app:layout_scrollFlags="scroll|enterAlways">
         </android.support.v7.widget.Toolbar>

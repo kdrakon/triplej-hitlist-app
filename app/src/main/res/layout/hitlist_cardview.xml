@@ -7,23 +7,33 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/maximized_hitlist_card_height"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="2dp">
 
     <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
-        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="40sp" android:paddingStart="10sp"
-                              android:textAlignment="textStart" android:paddingTop="5sp" android:scrollbars="none">
+
+        <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/artistImageView"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/artist"/>
+
+        <HorizontalScrollView android:id="@+id/alpha_card_section" android:layout_width="match_parent" android:layout_height="70sp"
+                              android:paddingStart="10sp" android:textAlignment="textStart" android:paddingTop="5sp" android:scrollbars="none"
+                              android:background="@color/alpha_card_section_color" android:layout_above="@+id/artist">
             <TextView
                     android:id="@+id/track"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/black"
                     android:textSize="15sp"
-                    android:height="30sp"
-                    android:layout_above="@+id/artist"
                     android:textAlignment="center"/>
         </HorizontalScrollView>
 
@@ -38,18 +48,6 @@
                 android:textSize="18sp"
                 android:singleLine="true"
                 android:paddingEnd="5sp"/>
-
-        <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/artistImageView"
-                android:scaleType="fitEnd"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:maxWidth="100dp"
-                android:maxHeight="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_above="@+id/artist"
-                android:padding="5dp"/>
 
     </RelativeLayout>
 

@@ -4,12 +4,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -71,18 +74,38 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
         TextView track = (TextView) viewHolder.cardView.findViewById(R.id.track);
         track.setText(hitListEntity.getTrack());
 
-        NetworkImageView artistImage = (NetworkImageView) viewHolder.cardView.findViewById(R.id.artistImageView);
-        Optional<String> cachedImageUrl = imageLookup.getCachedImageUrl(hitListEntity.getArtist());
-        if (cachedImageUrl.isPresent())
-        {
-            artistImage.setImageUrl(cachedImageUrl.get(), networkImageLoader);
-            artistImage.setVisibility(View.VISIBLE);
-        } else {
-            artistImage.setVisibility(View.GONE);
-        }
+        loadCardImage(viewHolder, hitListEntity);
 
         // Attach query listener
         viewHolder.cardView.setOnLongClickListener(new HitListCardQueryListener(hitListEntity));
+    }
+
+    private void loadCardImage(HitListCardViewHolder viewHolder, HitListEntity hitListEntity)
+    {
+        NetworkImageView artistImage = (NetworkImageView) viewHolder.cardView.findViewById(R.id.artistImageView);
+        Optional<String> cachedImageUrl = imageLookup.getCachedImageUrl(hitListEntity.getArtist());
+        ViewGroup.LayoutParams layoutParams = viewHolder.cardView.getLayoutParams();
+        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) viewHolder.cardView.findViewById(R.id.alpha_card_section);
+
+        int alphaCardSectionColor = viewHolder.cardView.getResources().getColor(R.color.alpha_card_section_color);
+
+        if (cachedImageUrl.isPresent())
+        {
+            artistImage.setImageUrl(cachedImageUrl.get(), networkImageLoader);
+            layoutParams.height = (int) viewHolder.cardView.getResources().getDimension(R.dimen.maximized_hitlist_card_height);
+            horizontalScrollView.setBackgroundColor(alphaCardSectionColor);
+            ((TextView) viewHolder.cardView.findViewById(R.id.track)).setTextColor(Color.WHITE);
+            artistImage.setVisibility(View.VISIBLE);
+
+        } else
+        {
+            layoutParams.height = (int) viewHolder.cardView.getResources().getDimension(R.dimen.minimized_hitlist_card_height);
+            horizontalScrollView.setBackgroundColor(Color.WHITE);
+            ((TextView) viewHolder.cardView.findViewById(R.id.track)).setTextColor(Color.BLACK);
+            artistImage.setVisibility(View.GONE);
+        }
+
+        viewHolder.cardView.setLayoutParams(layoutParams);
     }
 
     @Override
