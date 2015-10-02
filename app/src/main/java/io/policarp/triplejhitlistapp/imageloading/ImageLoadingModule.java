@@ -1,12 +1,10 @@
 package io.policarp.triplejhitlistapp.imageloading;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.inject.AbstractModule;
@@ -34,23 +32,8 @@ public class ImageLoadingModule extends AbstractModule
     @ContextSingleton
     RequestQueue getNetworkImageLoaderRequestQueue(@Named("applicationContext") Context context)
     {
-        final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context);
+        final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context, 100_000_000);
         return networkImageLoaderRequestQueue;
-    }
-
-    @Provides
-    @Named("imageLoadingDiskBasedCache")
-    @ContextSingleton
-    DiskBasedCache getImageLoadingDiskBasedCache(@Named("applicationContext") Context context)
-    {
-        final File diskCache = new File(context.getCacheDir(), "artist_image_cache");
-        if (!diskCache.exists()) diskCache.mkdirs();
-
-        final DiskBasedCache diskBasedCache = new DiskBasedCache(diskCache, 100_000_000);
-        // initialize to reload already cached files
-        diskBasedCache.initialize();
-
-        return diskBasedCache;
     }
 
     @Provides
