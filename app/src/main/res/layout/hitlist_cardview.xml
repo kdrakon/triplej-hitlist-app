@@ -7,35 +7,46 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/maximized_hitlist_card_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/minimum_hitlist_card_height"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="2dp">
 
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
 
         <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/artistImageView"
                 android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_above="@+id/artist"/>
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"/>
 
-        <HorizontalScrollView android:id="@+id/alpha_card_section" android:layout_width="match_parent" android:layout_height="70sp"
-                              android:paddingStart="10sp" android:textAlignment="textStart" android:paddingTop="5sp" android:scrollbars="none"
-                              android:background="@color/alpha_card_section_color" android:layout_above="@+id/artist">
-            <TextView
-                    android:id="@+id/track"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:textAlignment="center"/>
-        </HorizontalScrollView>
+        <RelativeLayout android:id="@+id/card_info_section"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/light_card_info_section_color"
+                        android:layout_above="@+id/artist">
+
+            <HorizontalScrollView android:id="@+id/track_scroll_view"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="70sp"
+                                  android:paddingStart="10sp"
+                                  android:textAlignment="textStart"
+                                  android:paddingTop="5sp"
+                                  android:scrollbars="none">
+                <TextView
+                        android:id="@+id/track"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:textAlignment="center"/>
+
+            </HorizontalScrollView>
+
+        </RelativeLayout>
 
         <TextView
                 android:id="@+id/artist"
@@ -49,6 +60,6 @@
                 android:singleLine="true"
                 android:paddingEnd="5sp"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

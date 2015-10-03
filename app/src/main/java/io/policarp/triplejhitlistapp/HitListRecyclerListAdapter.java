@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -84,28 +85,21 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
     {
         NetworkImageView artistImage = (NetworkImageView) viewHolder.cardView.findViewById(R.id.artistImageView);
         Optional<String> cachedImageUrl = imageLookup.getCachedImageUrl(hitListEntity.getArtist());
-        ViewGroup.LayoutParams layoutParams = viewHolder.cardView.getLayoutParams();
-        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) viewHolder.cardView.findViewById(R.id.alpha_card_section);
-
-        int alphaCardSectionColor = viewHolder.cardView.getResources().getColor(R.color.alpha_card_section_color);
+        RelativeLayout cardInfoSection = (RelativeLayout) viewHolder.cardView.findViewById(R.id.card_info_section);
 
         if (cachedImageUrl.isPresent())
         {
             artistImage.setImageUrl(cachedImageUrl.get(), networkImageLoader);
-            layoutParams.height = (int) viewHolder.cardView.getResources().getDimension(R.dimen.maximized_hitlist_card_height);
-            horizontalScrollView.setBackgroundColor(alphaCardSectionColor);
+            cardInfoSection.setBackgroundColor(viewHolder.cardView.getResources().getColor(R.color.dark_card_info_section_color));
             ((TextView) viewHolder.cardView.findViewById(R.id.track)).setTextColor(Color.WHITE);
             artistImage.setVisibility(View.VISIBLE);
 
         } else
         {
-            layoutParams.height = (int) viewHolder.cardView.getResources().getDimension(R.dimen.minimized_hitlist_card_height);
-            horizontalScrollView.setBackgroundColor(Color.WHITE);
+            cardInfoSection.setBackgroundColor(viewHolder.cardView.getResources().getColor(R.color.light_card_info_section_color));
             ((TextView) viewHolder.cardView.findViewById(R.id.track)).setTextColor(Color.BLACK);
             artistImage.setVisibility(View.GONE);
         }
-
-        viewHolder.cardView.setLayoutParams(layoutParams);
     }
 
     @Override
