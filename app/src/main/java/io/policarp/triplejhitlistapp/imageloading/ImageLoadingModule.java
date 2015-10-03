@@ -32,7 +32,7 @@ public class ImageLoadingModule extends AbstractModule
     @ContextSingleton
     RequestQueue getNetworkImageLoaderRequestQueue(@Named("applicationContext") Context context)
     {
-        final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context, 100_000_000);
+        final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context, 256_000_000);
         return networkImageLoaderRequestQueue;
     }
 
@@ -42,7 +42,7 @@ public class ImageLoadingModule extends AbstractModule
     Cache<String, Bitmap> getImageLoadingMemBasedCache()
     {
         final Cache<String, Bitmap> memCache =
-                CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.HOURS).build();
+                CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.MINUTES).build();
 
         return memCache;
     }
