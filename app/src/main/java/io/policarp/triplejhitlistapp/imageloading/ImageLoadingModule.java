@@ -1,10 +1,14 @@
 package io.policarp.triplejhitlistapp.imageloading;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import com.android.volley.Network;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.inject.AbstractModule;
@@ -30,9 +34,14 @@ public class ImageLoadingModule extends AbstractModule
     @Provides
     @Named("networkImageLoaderRequestQueue")
     @ContextSingleton
-    RequestQueue getNetworkImageLoaderRequestQueue(@Named("applicationContext") Context context)
+    RequestQueue getNetworkImageLoaderRequestQueue(DiskBasedImageCache diskBasedImageCache)
     {
-        final RequestQueue networkImageLoaderRequestQueue = Volley.newRequestQueue(context, 256_000_000);
+        diskBasedImageCache.initialize();
+
+        final Network network = new BasicNetwork(new HurlStack());
+        final RequestQueue networkImageLoaderRequestQueue = new RequestQueue(diskBasedImageCache, network);
+        networkImageLoaderRequestQueue.start();
+
         return networkImageLoaderRequestQueue;
     }
 
