@@ -91,6 +91,8 @@ public class MainActivity extends RoboActionBarActivity
         archivedListView.setOnTouchListener(onTouchListener);
 
         // configure swipe refresh
+        hitListViewRefreshLayout.setProgressViewOffset(false, 100, 200);
+        hitListViewRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
         hitListViewRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
@@ -121,7 +123,7 @@ public class MainActivity extends RoboActionBarActivity
                 {
                     case PARSE_HIT_LIST_COMPLETE_ACTION:
                         hitListViewRefreshLayout.setRefreshing(false);
-                        hitListView.removeAllViewsInLayout();
+                        hitListView.removeAllViews();
                         break;
                 }
             }
