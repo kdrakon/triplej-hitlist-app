@@ -42,7 +42,7 @@ public class ImageLoadingModule extends AbstractModule
     Cache<String, Bitmap> getImageLoadingMemBasedCache()
     {
         final Cache<String, Bitmap> memCache =
-                CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.MINUTES).build();
+                CacheBuilder.newBuilder().maximumSize(200).expireAfterWrite(1, TimeUnit.HOURS).build();
 
         return memCache;
     }

@@ -8,7 +8,9 @@
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
-    <color name="dark_card_info_section_color">#55000000</color>
+    <color name="hot_pink">#FF69B4</color>
+
+    <color name="dark_card_info_section_color">@android:color/holo_blue_dark</color>
     <color name="light_card_info_section_color">@android:color/white</color>
 
 </resources>

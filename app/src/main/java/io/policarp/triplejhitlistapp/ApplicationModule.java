@@ -30,6 +30,14 @@ public class ApplicationModule extends AbstractModule
     }
 
     @Provides
+    @Named("tripleJHitListApi")
+    @ContextSingleton
+    public String getTripleJHitListApi()
+    {
+        return "http://triplejgizmo.abc.net.au:8080/jjj-hitlist/current/app/webroot/latest/play.txt";
+    }
+
+    @Provides
     @Named("hitListGestureListener")
     public GestureDetector getHitListGestureDector(HitListGestureListener hitListGestureListener)
     {
