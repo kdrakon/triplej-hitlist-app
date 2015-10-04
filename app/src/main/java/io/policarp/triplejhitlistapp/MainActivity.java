@@ -61,7 +61,7 @@ public class MainActivity extends RoboActionBarActivity
         hitListView.setHasFixedSize(true);
         hitListView.setLayoutManager(new LinearLayoutManager(this));
         hitListView.setAdapter(hitListRecyclerListAdapter);
-        hitListView.setItemViewCacheSize(hitListDaoManager.getActiveHitList().size());
+        hitListView.setItemViewCacheSize(2);
 
         archivedListView.setHasFixedSize(true);
         archivedListView.setLayoutManager(new LinearLayoutManager(this));
