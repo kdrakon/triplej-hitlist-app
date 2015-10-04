@@ -1,7 +1,15 @@
 package io.policarp.triplejhitlistapp;
 
+import static io.policarp.triplejhitlistapp.parsing.HitListParsingService.HIT_LIST_URL_EXTRA;
+import static io.policarp.triplejhitlistapp.parsing.HitListParsingService.PARSE_HIT_LIST_ACTION;
+import static io.policarp.triplejhitlistapp.parsing.HitListParsingService.PARSE_HIT_LIST_COMPLETE_ACTION;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +39,9 @@ public class MainActivity extends RoboActionBarActivity
     private RecyclerView archivedListView;
 
     @Inject
+    private LocalBroadcastManager localBroadcastManager;
+
+    @Inject
     @Named("tripleJHitListApi")
     private String tripleJHitListApi;
 
@@ -54,6 +65,7 @@ public class MainActivity extends RoboActionBarActivity
     {
         super.onCreate(savedInstanceState);
         configureHitListViews();
+        configureLocalBroadcastManager();
     }
 
     private void configureHitListViews()
@@ -61,7 +73,6 @@ public class MainActivity extends RoboActionBarActivity
         hitListView.setHasFixedSize(true);
         hitListView.setLayoutManager(new LinearLayoutManager(this));
         hitListView.setAdapter(hitListRecyclerListAdapter);
-        hitListView.setItemViewCacheSize(2);
 
         archivedListView.setHasFixedSize(true);
         archivedListView.setLayoutManager(new LinearLayoutManager(this));
@@ -86,7 +97,6 @@ public class MainActivity extends RoboActionBarActivity
             public void onRefresh()
             {
                 refreshHitList();
-                hitListViewRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -94,10 +104,29 @@ public class MainActivity extends RoboActionBarActivity
     private void refreshHitList()
     {
         final Intent intent =
-                new Intent(HitListParsingService.PARSE_HIT_LIST_ACTION, null, this, HitListParsingService.class);
-        intent.putExtra(HitListParsingService.HIT_LIST_URL_EXTRA, tripleJHitListApi);
+                new Intent(PARSE_HIT_LIST_ACTION, null, this, HitListParsingService.class);
+        intent.putExtra(HIT_LIST_URL_EXTRA, tripleJHitListApi);
 
         startService(intent);
+    }
+
+    private void configureLocalBroadcastManager()
+    {
+        localBroadcastManager.registerReceiver(new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                switch (intent.getAction())
+                {
+                    case PARSE_HIT_LIST_COMPLETE_ACTION:
+                        hitListViewRefreshLayout.setRefreshing(false);
+                        hitListView.removeAllViewsInLayout();
+                        break;
+                }
+            }
+
+        }, new IntentFilter(PARSE_HIT_LIST_COMPLETE_ACTION));
     }
 
     @Override

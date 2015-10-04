@@ -1,6 +1,7 @@
 package io.policarp.triplejhitlistapp;
 
 import android.content.Context;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.GestureDetector;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -50,5 +51,13 @@ public class ApplicationModule extends AbstractModule
     public RequestQueue getGlobalRequestQueue(@Named("applicationContext") Context context)
     {
         return Volley.newRequestQueue(context);
+    }
+
+    @Provides
+    @ContextSingleton
+    public LocalBroadcastManager getlocalBroadcastManager(@Named("applicationContext") Context context)
+    {
+        final LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        return localBroadcastManager;
     }
 }

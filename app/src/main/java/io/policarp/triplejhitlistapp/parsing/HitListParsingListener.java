@@ -1,8 +1,12 @@
 package io.policarp.triplejhitlistapp.parsing;
 
+import static io.policarp.triplejhitlistapp.parsing.HitListParsingService.PARSE_HIT_LIST_COMPLETE_ACTION;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.inject.Inject;
@@ -16,6 +20,9 @@ import org.roboguice.shaded.goole.common.base.Optional;
  */
 public class HitListParsingListener implements Response.Listener<String>, Response.ErrorListener
 {
+    @Inject
+    private LocalBroadcastManager localBroadcastManager;
+
     @Inject
     private HitListParser hitListParser;
 
@@ -32,6 +39,7 @@ public class HitListParsingListener implements Response.Listener<String>, Respon
         {
             hitListDaoManager.updateHitListEntities(newHitListEntities.get());
             doArtistImageLookups(newHitListEntities.get());
+            localBroadcastManager.sendBroadcast(new Intent(PARSE_HIT_LIST_COMPLETE_ACTION));
 
         } else {
             // TODO inform user of failure

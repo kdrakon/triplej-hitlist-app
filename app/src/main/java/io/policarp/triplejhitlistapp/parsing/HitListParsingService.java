@@ -15,6 +15,7 @@ import roboguice.service.RoboIntentService;
 public class HitListParsingService extends RoboIntentService
 {
     public static final String PARSE_HIT_LIST_ACTION = "PARSE_HIT_LIST";
+    public static final String PARSE_HIT_LIST_COMPLETE_ACTION = "PARSE_HIT_LIST_COMPLETE";
     public static final String CANCEL_PARSE_HIT_LIST_ACTION = "CANCEL_PARSE_HIT_LIST";
     public static final String HIT_LIST_URL_EXTRA = "HIT_LIST_URL";
 
