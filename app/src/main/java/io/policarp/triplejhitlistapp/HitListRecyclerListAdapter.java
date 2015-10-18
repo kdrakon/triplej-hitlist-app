@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,11 +18,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.android.volley.Cache;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import io.policarp.triplejhitlistapp.dao.HitListEntity;
+import io.policarp.triplejhitlistapp.imageloading.DiskBasedImageCache;
 import io.policarp.triplejhitlistapp.imageloading.WikipediaImageLookup;
 import org.roboguice.shaded.goole.common.base.Optional;
 import org.roboguice.shaded.goole.common.cache.LoadingCache;
@@ -36,13 +39,15 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
     private final WikipediaImageLookup imageLookup;
     private final LoadingCache<String, List<HitListEntity>> cachedHitList;
     private final RequestQueue networkImageLoaderRequestQueue;
+    private final DiskBasedImageCache diskBasedImageCache;
 
     public HitListRecyclerListAdapter(LoadingCache<String, List<HitListEntity>> cachedHitList, WikipediaImageLookup imageLookup,
-            RequestQueue networkImageLoaderRequestQueue)
+            RequestQueue networkImageLoaderRequestQueue, DiskBasedImageCache diskBasedImageCache)
     {
         this.imageLookup = imageLookup;
         this.cachedHitList = cachedHitList;
         this.networkImageLoaderRequestQueue = networkImageLoaderRequestQueue;
+        this.diskBasedImageCache = diskBasedImageCache;
     }
 
     public static class HitListCardViewHolder extends RecyclerView.ViewHolder
@@ -100,23 +105,33 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
         {
             artistImage.setVisibility(View.GONE);
 
-            ImageRequest imageRequest = new ImageRequest(cachedImageUrl.get(), new Response.Listener<Bitmap>()
+            Cache.Entry cachedImageEntry = diskBasedImageCache.get("0:".concat(cachedImageUrl.get()));
+            if (cachedImageEntry != null)
             {
-                @Override
-                public void onResponse(Bitmap response)
-                {
-                    artistImage.setImageBitmap(response);
-                    artistImage.setVisibility(View.VISIBLE);
-                }
-            }, 800, 600, ImageView.ScaleType.FIT_CENTER, null, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                }
-            });
+                artistImage.setImageBitmap(BitmapFactory.decodeByteArray(cachedImageEntry.data, 0, cachedImageEntry.data.length));
+                artistImage.setVisibility(View.VISIBLE);
 
-            networkImageLoaderRequestQueue.add(imageRequest);
+            } else {
+
+                ImageRequest imageRequest = new ImageRequest(cachedImageUrl.get(), new Response.Listener<Bitmap>()
+                {
+                    @Override
+                    public void onResponse(Bitmap response)
+                    {
+                        artistImage.setImageBitmap(response);
+                        artistImage.setVisibility(View.VISIBLE);
+                    }
+                }, 800, 600, ImageView.ScaleType.FIT_CENTER, null, new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                    }
+                });
+
+                networkImageLoaderRequestQueue.add(imageRequest);
+            }
+
             cardInfoSection.setBackgroundColor(cardView.getResources().getColor(R.color.dark_card_info_section_color));
             ((TextView) cardView.findViewById(R.id.track)).setTextColor(Color.WHITE);
 

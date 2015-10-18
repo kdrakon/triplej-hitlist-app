@@ -10,6 +10,7 @@ import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import io.policarp.triplejhitlistapp.dao.HitListDaoManager;
 import io.policarp.triplejhitlistapp.dao.HitListEntity;
+import io.policarp.triplejhitlistapp.imageloading.DiskBasedImageCache;
 import io.policarp.triplejhitlistapp.imageloading.WikipediaImageLookup;
 import org.roboguice.shaded.goole.common.cache.CacheBuilder;
 import org.roboguice.shaded.goole.common.cache.CacheLoader;
@@ -29,9 +30,10 @@ public class HitListRecyclerListAdapterModule extends AbstractModule
     @Named("recyclerListAdapterForHitList")
     public HitListRecyclerListAdapter getHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
             @Named("hitListCache") LoadingCache<String, List<HitListEntity>> hitListCache,
-            @Named("networkImageLoaderRequestQueue") RequestQueue networkImageLoaderRequestQueue)
+            @Named("networkImageLoaderRequestQueue") RequestQueue networkImageLoaderRequestQueue,
+            DiskBasedImageCache diskBasedImageCache)
     {
-        return new HitListRecyclerListAdapter(hitListCache, imageLookup, networkImageLoaderRequestQueue);
+        return new HitListRecyclerListAdapter(hitListCache, imageLookup, networkImageLoaderRequestQueue, diskBasedImageCache);
     }
 
     @Provides
@@ -57,9 +59,10 @@ public class HitListRecyclerListAdapterModule extends AbstractModule
     @Named("recyclerListAdapterForArchivedHitList")
     public HitListRecyclerListAdapter getArchivedHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
             @Named("archivedListCache") LoadingCache<String, List<HitListEntity>> archivedHitListCache,
-            @Named("networkImageLoaderRequestQueue") RequestQueue networkImageLoaderRequestQueue)
+            @Named("networkImageLoaderRequestQueue") RequestQueue networkImageLoaderRequestQueue,
+            DiskBasedImageCache diskBasedImageCache)
     {
-        return new HitListRecyclerListAdapter(archivedHitListCache, imageLookup, networkImageLoaderRequestQueue);
+        return new HitListRecyclerListAdapter(archivedHitListCache, imageLookup, networkImageLoaderRequestQueue, diskBasedImageCache);
     }
 
     @Provides

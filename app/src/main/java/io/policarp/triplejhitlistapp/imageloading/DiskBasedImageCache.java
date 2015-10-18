@@ -16,7 +16,7 @@ import roboguice.inject.ContextSingleton;
  * Created by kdrakon on 04/10/15.
  */
 @ContextSingleton
-class DiskBasedImageCache extends DiskBasedCache
+public class DiskBasedImageCache extends DiskBasedCache
 {
     private static final int DEFAULT_CACHE_BYTE_SIZE = 128_000_000;
     private static final float MAX_IMAGE_WIDTH = 600f;
