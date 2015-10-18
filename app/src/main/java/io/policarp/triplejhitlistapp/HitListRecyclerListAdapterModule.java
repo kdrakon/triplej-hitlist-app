@@ -3,6 +3,7 @@ package io.policarp.triplejhitlistapp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -28,9 +29,9 @@ public class HitListRecyclerListAdapterModule extends AbstractModule
     @Named("recyclerListAdapterForHitList")
     public HitListRecyclerListAdapter getHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
             @Named("hitListCache") LoadingCache<String, List<HitListEntity>> hitListCache,
-            @Named("artistImageLoader") ImageLoader artistImageLoader)
+            @Named("networkImageLoaderRequestQueue") RequestQueue networkImageLoaderRequestQueue)
     {
-        return new HitListRecyclerListAdapter(hitListCache, imageLookup, artistImageLoader);
+        return new HitListRecyclerListAdapter(hitListCache, imageLookup, networkImageLoaderRequestQueue);
     }
 
     @Provides
@@ -56,9 +57,9 @@ public class HitListRecyclerListAdapterModule extends AbstractModule
     @Named("recyclerListAdapterForArchivedHitList")
     public HitListRecyclerListAdapter getArchivedHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
             @Named("archivedListCache") LoadingCache<String, List<HitListEntity>> archivedHitListCache,
-            @Named("artistImageLoader") ImageLoader artistImageLoader)
+            @Named("networkImageLoaderRequestQueue") RequestQueue networkImageLoaderRequestQueue)
     {
-        return new HitListRecyclerListAdapter(archivedHitListCache, imageLookup, artistImageLoader);
+        return new HitListRecyclerListAdapter(archivedHitListCache, imageLookup, networkImageLoaderRequestQueue);
     }
 
     @Provides

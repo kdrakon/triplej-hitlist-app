@@ -1,22 +1,26 @@
 package io.policarp.triplejhitlistapp;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import io.policarp.triplejhitlistapp.dao.HitListEntity;
 import io.policarp.triplejhitlistapp.imageloading.WikipediaImageLookup;
 import org.roboguice.shaded.goole.common.base.Optional;
@@ -27,34 +31,37 @@ import org.roboguice.shaded.goole.common.cache.LoadingCache;
  */
 public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecyclerListAdapter.HitListCardViewHolder>
 {
+    private static final int CARD_COLLECTION_SIZE = 20;
+
     private final WikipediaImageLookup imageLookup;
     private final LoadingCache<String, List<HitListEntity>> cachedHitList;
-    private final ImageLoader networkImageLoader;
+    private final RequestQueue networkImageLoaderRequestQueue;
 
-    public HitListRecyclerListAdapter(LoadingCache<String, List<HitListEntity>> cachedHitList,
-            WikipediaImageLookup imageLookup, ImageLoader networkImageLoader)
+    public HitListRecyclerListAdapter(LoadingCache<String, List<HitListEntity>> cachedHitList, WikipediaImageLookup imageLookup,
+            RequestQueue networkImageLoaderRequestQueue)
     {
         this.imageLookup = imageLookup;
         this.cachedHitList = cachedHitList;
-        this.networkImageLoader = networkImageLoader;
+        this.networkImageLoaderRequestQueue = networkImageLoaderRequestQueue;
     }
 
     public static class HitListCardViewHolder extends RecyclerView.ViewHolder
     {
-        public CardView cardView;
-        public HitListCardViewHolder(CardView cardView)
+        public LinearLayout cardCollectionView;
+        public HitListCardViewHolder(LinearLayout cardCollectionView)
         {
-            super(cardView);
-            this.cardView = cardView;
+            super(cardCollectionView);
+            this.cardCollectionView = cardCollectionView;
         }
     }
 
     @Override
     public HitListCardViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
     {
-        CardView cardView = (CardView) LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.hitlist_cardview, viewGroup, false);
+        LinearLayout cardCollectionView = (LinearLayout) LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.hitlist_card_collection, viewGroup, false);
 
-        HitListCardViewHolder viewHolder = new HitListCardViewHolder(cardView);
+        HitListCardViewHolder viewHolder = new HitListCardViewHolder(cardCollectionView);
         return viewHolder;
     }
 
@@ -64,40 +71,59 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
     @Override
     public void onBindViewHolder(HitListCardViewHolder viewHolder, int position)
     {
-        final HitListEntity hitListEntity = getCachedHitList().get(position);
+        final List<HitListEntity> hitListEntities = new ArrayList<>(getCachedHitList());
 
-        if (hitListEntity.isNewHitListEntity()) viewHolder.cardView.setCardElevation(4f);
+        int offset = (position * CARD_COLLECTION_SIZE);
 
-        TextView artist = (TextView) viewHolder.cardView.findViewById(R.id.artist);
+        for (int i = offset; i < (offset + CARD_COLLECTION_SIZE) && i < hitListEntities.size(); i++)
+        {
+            final HitListEntity hitListEntity = hitListEntities.get(i);
+            final CardView cardView = (CardView) viewHolder.cardCollectionView.getChildAt(i % CARD_COLLECTION_SIZE);
+            loadCard(cardView, hitListEntity);
+        }
+    }
+
+    private void loadCard(final CardView cardView, HitListEntity hitListEntity)
+    {
+        TextView artist = (TextView) cardView.findViewById(R.id.artist);
         artist.setText(hitListEntity.getArtist());
         artist.setMovementMethod(new ScrollingMovementMethod());
 
-        TextView track = (TextView) viewHolder.cardView.findViewById(R.id.track);
+        TextView track = (TextView) cardView.findViewById(R.id.track);
         track.setText(hitListEntity.getTrack());
 
-        loadCardImage(viewHolder, hitListEntity);
-
-        // Attach query listener
-        viewHolder.cardView.setOnLongClickListener(new HitListCardQueryListener(hitListEntity));
-    }
-
-    private void loadCardImage(HitListCardViewHolder viewHolder, HitListEntity hitListEntity)
-    {
-        NetworkImageView artistImage = (NetworkImageView) viewHolder.cardView.findViewById(R.id.artistImageView);
+        final ImageView artistImage = (ImageView) cardView.findViewById(R.id.artistImageView);
         Optional<String> cachedImageUrl = imageLookup.getCachedImageUrl(hitListEntity.getArtist());
-        RelativeLayout cardInfoSection = (RelativeLayout) viewHolder.cardView.findViewById(R.id.card_info_section);
+        RelativeLayout cardInfoSection = (RelativeLayout) cardView.findViewById(R.id.card_info_section);
 
         if (cachedImageUrl.isPresent())
         {
-            artistImage.setImageUrl(cachedImageUrl.get(), networkImageLoader);
-            cardInfoSection.setBackgroundColor(viewHolder.cardView.getResources().getColor(R.color.dark_card_info_section_color));
-            ((TextView) viewHolder.cardView.findViewById(R.id.track)).setTextColor(Color.WHITE);
-            artistImage.setVisibility(View.VISIBLE);
+            artistImage.setVisibility(View.GONE);
+
+            ImageRequest imageRequest = new ImageRequest(cachedImageUrl.get(), new Response.Listener<Bitmap>()
+            {
+                @Override
+                public void onResponse(Bitmap response)
+                {
+                    artistImage.setImageBitmap(response);
+                    artistImage.setVisibility(View.VISIBLE);
+                }
+            }, 800, 600, ImageView.ScaleType.FIT_CENTER, null, new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                }
+            });
+
+            networkImageLoaderRequestQueue.add(imageRequest);
+            cardInfoSection.setBackgroundColor(cardView.getResources().getColor(R.color.dark_card_info_section_color));
+            ((TextView) cardView.findViewById(R.id.track)).setTextColor(Color.WHITE);
 
         } else
         {
-            cardInfoSection.setBackgroundColor(viewHolder.cardView.getResources().getColor(R.color.light_card_info_section_color));
-            ((TextView) viewHolder.cardView.findViewById(R.id.track)).setTextColor(Color.BLACK);
+            cardInfoSection.setBackgroundColor(cardView.getResources().getColor(R.color.light_card_info_section_color));
+            ((TextView) cardView.findViewById(R.id.track)).setTextColor(Color.BLACK);
             artistImage.setVisibility(View.GONE);
         }
     }
@@ -105,7 +131,7 @@ public class HitListRecyclerListAdapter extends RecyclerView.Adapter<HitListRecy
     @Override
     public int getItemCount()
     {
-        return getCachedHitList().size();
+        return getCachedHitList().size() / CARD_COLLECTION_SIZE;
     }
 
     public List<HitListEntity> getCachedHitList()
