@@ -14,34 +14,4 @@
 
     <include layout="@layout/hitlist_cardview"/>
 
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
-    <include layout="@layout/hitlist_cardview"/>
-
 </LinearLayout>

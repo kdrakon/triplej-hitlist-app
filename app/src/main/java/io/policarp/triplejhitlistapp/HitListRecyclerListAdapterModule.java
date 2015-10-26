@@ -28,12 +28,10 @@ public class HitListRecyclerListAdapterModule extends AbstractModule
 
     @Provides
     @Named("recyclerListAdapterForHitList")
-    public HitListRecyclerListAdapter getHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
-            @Named("hitListCache") LoadingCache<String, List<HitListEntity>> hitListCache,
-            @Named("networkImageLoaderRequestQueue") RequestQueue networkImageLoaderRequestQueue,
-            DiskBasedImageCache diskBasedImageCache)
+    public HitListRecyclerListAdapter getHitListRecyclerListAdapter(
+            @Named("hitListCache") LoadingCache<String, List<HitListEntity>> hitListCache)
     {
-        return new HitListRecyclerListAdapter(hitListCache, imageLookup, networkImageLoaderRequestQueue, diskBasedImageCache);
+        return new HitListRecyclerListAdapter(hitListCache);
     }
 
     @Provides
@@ -57,12 +55,10 @@ public class HitListRecyclerListAdapterModule extends AbstractModule
 
     @Provides
     @Named("recyclerListAdapterForArchivedHitList")
-    public HitListRecyclerListAdapter getArchivedHitListRecyclerListAdapter(WikipediaImageLookup imageLookup,
-            @Named("archivedListCache") LoadingCache<String, List<HitListEntity>> archivedHitListCache,
-            @Named("networkImageLoaderRequestQueue") RequestQueue networkImageLoaderRequestQueue,
-            DiskBasedImageCache diskBasedImageCache)
+    public HitListRecyclerListAdapter getArchivedHitListRecyclerListAdapter(
+            @Named("archivedListCache") LoadingCache<String, List<HitListEntity>> archivedHitListCache)
     {
-        return new HitListRecyclerListAdapter(archivedHitListCache, imageLookup, networkImageLoaderRequestQueue, diskBasedImageCache);
+        return new HitListRecyclerListAdapter(archivedHitListCache);
     }
 
     @Provides
